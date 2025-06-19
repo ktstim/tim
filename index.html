@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>個人記帳本</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .income { color: green; }
+    .expense { color: red; }
+  </style>
+</head>
+<body>
+  <h1>個人記帳本</h1>
+  <form id="recordForm">
+    <label>月費：<input type="number" id="amount" required></label><br>
+    <label>咩台：<select id="type">
+      <option value="income">CSL</option>
+      <option value="expense">1010</option>
+    </select></label><br>
+    <label>合約期：<select id="category"></select></label><br>
+    <label>開台日期：<input type="date" id="date" required></label><br>
+    <label>備註：<input type="text" id="remark"></label><br>
+    <button type="submit">新增紀錄</button>
+  </form>
+  <div id="recordsTable"></div>
+  <canvas id="chart" width="400" height="400"></canvas>
+  <script>
+    // 分類與 localStorage 管理
+    let records = JSON.parse(localStorage.getItem('records')) || [];
+    const categories = {
+      income: ['12', '24', '36', 'FTG'],
+      expense: ['飲食', '交通', '住宿', '娛樂', '購物', '其他']
+    };
+    // 初始化分類選項
+    function updateCategories() {
+      const type = document.getElementById('type').value;
+      const categorySelect = document.getElementById('category');
+      categorySelect.innerHTML = categories[type].map(cat => `<option value="${cat}">${cat}</option>`).join('');
+    }
+    // 送出表單
+    document.getElementById('recordForm').onsubmit = function(e) {
+      e.preventDefault();
+      const record = {
+        amount: document.getElementById('amount').value,
+        type: document.getElementById('type').value,
+        category: document.getElementById('category').value,
+        date: document.getElementById('date').value,
+        remark: document.getElementById('remark').value
+      };
+      records.push(record);
+      localStorage.setItem('records', JSON.stringify(records));
+      updateDisplay();
+      updateChart();
+      this.reset();
+    };
+    // 更新顯示
+    function updateDisplay() {
+      const tbody = records.map((r, i) => `<tr>
+        <td>${r.date}</td>
+        <td>${r.type === 'income' ? 'CSL' : '1010'}</td>
+        <td>${r.category}</td>
+        <td class="${r.type}">${r.type === 'income' ? '+' : '+'}${r.amount}</td>
+        <td>${r.remark || ''}</td>
+        <td><button onclick="deleteRecord(${i})">刪除</button></td>
+      </tr>`).join('');
+      document.getElementById('recordsTable').innerHTML = `<table>
+        <thead><tr><th>開台日期</th><th>咩台</th><th>合約期><th>金額</th><th>備註</th><th>操作</th></tr></thead>
+        <tbody>${tbody}</tbody>
+      </table>`;
+    }
+    // 刪除紀錄
+    function deleteRecord(index) {
+      records.splice(index, 1);
+      localStorage.setItem('records', JSON.stringify(records));
+      updateDisplay();
+      updateChart();
+    }
+    // 更新圖表
+    function updateChart() {
+      const ctx = document.getElementById('chart').getContext('2d');
+      if (window.chart) window.chart.destroy();
+      const data = categories.expense.reduce((acc, cat) => {
+        acc[cat] = records.filter(r => r.type === 'expense' && r.category === cat).reduce((sum, r) => sum + Number(r.amount), 0);
+        return acc;
+      }, {});
+      window.chart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: Object.keys(data),
+          datasets: [{ data: Object.values(data), backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'] }]
+        }
+      });
+    }
+    // 初始化
+    updateCategories();
+    updateDisplay();
+    updateChart();
+    document.getElementById('type').onchange = updateCategories;
+  </script>
+</body>
+</html>
