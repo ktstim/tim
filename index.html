@@ -1,28 +1,202 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant">
 <head>
-  <title>個人記帳本</title>
+  <title>香港四大網絡供應商優缺點比較 & 個人記帳本</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f9f9f9;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .left-panel {
+      flex: 1;
+      min-width: 350px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .right-panel {
+      flex: 2;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      color: #2c3e50;
+      margin-top: 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    ul {
+      padding-left: 20px;
+    }
     .income { color: green; }
     .expense { color: red; }
+    .chart-container {
+      width: 100%;
+      max-width: 400px;
+      margin: 20px auto;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
+    }
   </style>
 </head>
 <body>
-  <h1>個人記帳本</h1>
-  <form id="recordForm">
-    <label>月費：<input type="number" id="amount" required></label><br>
-    <label>咩台：<select id="type">
-      <option value="income">CSL</option>
-      <option value="expense">1010</option>
-    </select></label><br>
-    <label>合約期：<select id="category"></select></label><br>
-    <label>開台日期：<input type="date" id="date" required></label><br>
-    <label>備註：<input type="text" id="remark"></label><br>
-    <button type="submit">新增紀錄</button>
-  </form>
-  <div id="recordsTable"></div>
-  <canvas id="chart" width="400" height="400"></canvas>
+  <h1>香港四大網絡供應商優缺點比較 & 個人記帳本</h1>
+  <div class="container">
+    <!-- 左邊：個人記帳本 -->
+    <div class="left-panel">
+      <h2>個人記帳本</h2>
+      <form id="recordForm">
+        <label>月費：<input type="number" id="amount" required></label><br>
+        <label>咩台：<select id="type">
+          <option value="income">CSL</option>
+          <option value="expense">1010</option>
+        </select></label><br>
+        <label>合約期：<select id="category"></select></label><br>
+        <label>開台日期：<input type="date" id="date" required></label><br>
+        <label>備註：<input type="text" id="remark"></label><br>
+        <button type="submit">新增紀錄</button>
+      </form>
+      <div id="recordsTable"></div>
+      <div class="chart-container">
+        <canvas id="chart" width="400" height="400"></canvas>
+      </div>
+    </div>
+    <!-- 右邊：四大供應商比較 -->
+    <div class="right-panel">
+      <h2>香港四大網絡供應商優缺點比較</h2>
+      <p>香港主要的流動網絡供應商有四家，分別是：CSL（香港電訊旗下）、中國移動香港（CMHK）、3香港（3HK）、數碼通（SmarTone）。這四家供應商均擁有廣泛的4G及5G網絡覆蓋，並各自擁有不同的服務特色和優勢。</p>
+      <h3>各家網絡供應商優缺點</h3>
+      <table>
+        <tr>
+          <th>供應商</th>
+          <th>優點</th>
+          <th>缺點</th>
+        </tr>
+        <tr>
+          <td><strong>CSL</strong></td>
+          <td>
+            <ul>
+              <li>網絡覆蓋廣，全港港鐵、商業區、郊野公園等幾乎無死角</li>
+              <li>5G下載速度快，遊戲體驗佳，延遲低</li>
+              <li>客戶服務及門市支援多，超過20間門店及逾1,000間便利店支援</li>
+              <li>The Club積分回贈計劃，增值用戶體驗</li>
+            </ul>
+          </td>
+          <td>
+            <ul>
+              <li>部分月費計劃價格較高</li>
+              <li>入門計劃數據量較大，未必適合輕量用戶</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>CMHK</strong></td>
+          <td>
+            <ul>
+              <li>5G下載速度領先，網絡覆蓋與CSL並列領先</li>
+              <li>入門門檻低，適合數據用量少的用戶</li>
+              <li>漫遊數據及內地服務優惠多</li>
+            </ul>
+          </td>
+          <td>
+            <ul>
+              <li>部分用戶反映客服質素參差</li>
+              <li>數據計劃選擇較傳統，大容量計劃較少</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>3香港</strong></td>
+          <td>
+            <ul>
+              <li>價格親民，大容量計劃性價比高</li>
+              <li>漫遊及本地數據組合多樣化</li>
+              <li>信用卡及會員計劃額外優惠多</li>
+            </ul>
+          </td>
+          <td>
+            <ul>
+              <li>部分計劃需額外行政費</li>
+              <li>網絡穩定性及覆蓋略遜於CSL及CMHK</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>SmarTone</strong></td>
+          <td>
+            <ul>
+              <li>網絡穩定，服務質素一致</li>
+              <li>大容量計劃選擇多，適合重度用戶</li>
+              <li>漫遊數據及通話分鐘多</li>
+            </ul>
+          </td>
+          <td>
+            <ul>
+              <li>入門門檻較高，輕量用戶選擇較少</li>
+              <li>價格相對較高</li>
+            </ul>
+          </td>
+        </tr>
+      </table>
+      <h3>為何CSL優勝？</h3>
+      <table>
+        <tr>
+          <th>評比項目</th>
+          <th>CSL優勢說明</th>
+        </tr>
+        <tr>
+          <td>網絡覆蓋與穩定性</td>
+          <td>5G網絡覆蓋全港，包括港鐵、郊野公園、商業區及人流密集地區，覆蓋率高達98.9%</td>
+        </tr>
+        <tr>
+          <td>速度與低延遲</td>
+          <td>5G下載速度高達174.3Mbps，上載速度領先，遊戲及高清串流體驗極佳，延遲低至40ms以下</td>
+        </tr>
+        <tr>
+          <td>客戶服務與支援</td>
+          <td>門市及支援網絡遍佈全港，超過20間門店及逾1,000間便利店提供SIM卡銷售與支援</td>
+        </tr>
+        <tr>
+          <td>用戶體驗與增值服務</td>
+          <td>The Club積分回贈計劃，用戶消費可賺取積分兌換電子產品、餐飲或旅遊優惠</td>
+        </tr>
+        <tr>
+          <td>專業維護與故障處理</td>
+          <td>技術團隊專業高效，能迅速響應客戶查詢與投訴，持續優化服務質素</td>
+        </tr>
+      </table>
+    </div>
+  </div>
   <script>
     // 分類與 localStorage 管理
     let records = JSON.parse(localStorage.getItem('records')) || [];
@@ -63,7 +237,7 @@
         <td><button onclick="deleteRecord(${i})">刪除</button></td>
       </tr>`).join('');
       document.getElementById('recordsTable').innerHTML = `<table>
-        <thead><tr><th>開台日期</th><th>咩台</th><th>合約期><th>金額</th><th>備註</th><th>操作</th></tr></thead>
+        <thead><tr><th>開台日期</th><th>咩台</th><th>合約期</th><th>金額</th><th>備註</th><th>操作</th></tr></thead>
         <tbody>${tbody}</tbody>
       </table>`;
     }
